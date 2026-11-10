@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+*.mcpb
+*.tgz
+.DS_Store
+.env
+client_secret*.json
+credentials*.json

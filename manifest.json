@@ -1,0 +1,97 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/mcpb/main/schemas/mcpb-manifest-v0.4.schema.json",
+  "manifest_version": "0.4",
+  "name": "gsc-mcp",
+  "display_name": "Google Search Console",
+  "version": "0.1.0",
+  "description": "Search Console data, URL inspection, sitemaps and SEO opportunity finding for your own sites.",
+  "long_description": "Connects Claude to Google Search Console so you can analyze and improve the SEO of your websites and landing pages. Find striking-distance keywords, pages with poor click-through rates, decaying content and keyword cannibalization; inspect index status; audit a page's title, meta description, headings and structured data against the queries it ranks for; and manage sitemaps. Runs locally; credentials stay on your machine.",
+  "author": {
+    "name": "Portside Labs",
+    "url": "https://github.com/portside-labs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/portside-labs/gsc-mcp"
+  },
+  "homepage": "https://github.com/portside-labs/gsc-mcp",
+  "documentation": "https://github.com/portside-labs/gsc-mcp#readme",
+  "support": "https://github.com/portside-labs/gsc-mcp/issues",
+  "license": "MIT",
+  "keywords": ["seo", "google search console", "search console", "gsc", "landing pages", "analytics"],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/cli.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/cli.js"],
+      "env": {
+        "GSC_OAUTH_CLIENT_ID": "${user_config.oauth_client_id}",
+        "GSC_OAUTH_CLIENT_SECRET": "${user_config.oauth_client_secret}",
+        "GSC_SERVICE_ACCOUNT_KEY_FILE": "${user_config.service_account_key_file}",
+        "GSC_DEFAULT_SITE": "${user_config.default_site}",
+        "GSC_MCP_READ_ONLY": "${user_config.read_only}"
+      }
+    }
+  },
+  "tools": [
+    { "name": "auth_status", "description": "Show the connected Google account and access level" },
+    { "name": "login", "description": "Sign in to Google Search Console in your browser" },
+    { "name": "list_sites", "description": "List your Search Console properties" },
+    { "name": "search_analytics", "description": "Query clicks, impressions, CTR and position by any dimension" },
+    { "name": "performance_summary", "description": "Overview with trend, top queries, pages, devices and countries" },
+    { "name": "find_quick_wins", "description": "Striking-distance keywords ranked by potential clicks" },
+    { "name": "find_ctr_opportunities", "description": "Pages that rank well but get too few clicks" },
+    { "name": "compare_periods", "description": "Biggest gains and losses between two periods" },
+    { "name": "find_cannibalization", "description": "Queries where your pages compete with each other" },
+    { "name": "analyze_page", "description": "Deep dive on one landing page: queries, index status and on-page audit" },
+    { "name": "audit_page", "description": "On-page SEO audit of any URL" },
+    { "name": "inspect_urls", "description": "Google index status for URLs or a sitemap" },
+    { "name": "list_sitemaps", "description": "Submitted sitemaps and their status" },
+    { "name": "submit_sitemap", "description": "Submit or resubmit a sitemap" },
+    { "name": "delete_sitemap", "description": "Remove a sitemap from Search Console" }
+  ],
+  "prompts": [
+    { "name": "seo_audit", "description": "Prioritized SEO action plan from Search Console data", "arguments": ["site", "brand"], "text": "Run an SEO audit of ${arguments.site} using the gsc tools." },
+    { "name": "optimize_page", "description": "Improve one landing page using its search data", "arguments": ["url", "goal"], "text": "Optimize ${arguments.url} for search." },
+    { "name": "investigate_traffic_drop", "description": "Find where search traffic was lost and why", "arguments": ["site", "days"], "text": "Investigate the search traffic drop for ${arguments.site}." }
+  ],
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": { "node": ">=20.0.0" }
+  },
+  "user_config": {
+    "oauth_client_id": {
+      "type": "string",
+      "title": "OAuth client ID",
+      "description": "Client ID of a \"Desktop app\" OAuth client from Google Cloud Console (see the setup guide). After installing, ask Claude to sign in to Search Console.",
+      "required": false
+    },
+    "oauth_client_secret": {
+      "type": "string",
+      "title": "OAuth client secret",
+      "description": "Client secret of the same OAuth client.",
+      "required": false,
+      "sensitive": true
+    },
+    "service_account_key_file": {
+      "type": "file",
+      "title": "Service account key (optional)",
+      "description": "Use a service account instead of signing in. Add the service account's email as a user on your Search Console property first.",
+      "required": false
+    },
+    "default_site": {
+      "type": "string",
+      "title": "Default property (optional)",
+      "description": "Property to use when you do not name one, e.g. sc-domain:example.com",
+      "required": false
+    },
+    "read_only": {
+      "type": "boolean",
+      "title": "Read-only mode",
+      "description": "Hide the tools that submit or delete sitemaps.",
+      "required": false,
+      "default": false
+    }
+  }
+}
